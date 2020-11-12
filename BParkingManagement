@@ -1,0 +1,74 @@
+LXI H,00000H;
+MVI M,01EH;
+MVI E, 01EH;Initializing Number of Parking Slots
+MVI D, 000H;Initializing Counter
+MVI C, 000H;Initializing Zero Variable
+USER: IN 001H;Read User Input From Port Zero
+MVI H, 00H;
+MOV L, A;Indexing Input Value in L Register
+CMP C;
+JZ START;
+MOV B, M
+MVI M ,00H;
+DCR B;
+MOV A,B;
+CMP C
+JNZ Loop5;
+MVI A,00H;To Set Accumulator to Zero
+OUT 001H;To Rewrite Input Port Value to Zero
+hlt;
+Loop5: INX H;
+INR D;
+MVI M, 00H;
+MVI A, 00H;
+OUT 001H;
+hlt;
+START: IN 002H;
+CMP C
+JNZ Loop3;
+MOV A,M;
+CMP C;Check Whether Parking Slot is empty
+JZ Loop1;
+INX H;Move to next memory
+INR D;Increase Counter
+MOV A,E 
+SUB D;
+JM Loop2;Jump to Loop2 if Counter exceeds number of Parking Slots
+JP START;
+Loop1: MVI M,01H;
+MOV A,L;
+OUT 00H;
+MVI B,0FFH;
+ADD B;To Reset Flags
+hlt;
+Loop2: MVI A,00H;
+OUT 02H;
+MVI L, 00H;
+MVI M, 00H; 
+hlt;
+Loop3: MOV A,M
+INX H;
+INR D;
+ADD M;
+CMP C;
+JZ Loop4;
+INX H;Move to next memory
+INR D;Increase Counter
+MOV A,E 
+SUB D;
+MVI B,01H
+SUB B
+JM Loop2;Jump to Loop2 if Counter exceeds number of Parking Slots
+JP START;
+Loop4: MVI M, 02H;
+DCX H;
+MVI M,02H;
+MVI A,00H;
+OUT 02H;
+MVI B,0FFH;
+ADD B;
+hlt;
+
+
+
+
